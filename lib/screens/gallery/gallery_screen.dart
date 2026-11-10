@@ -1,4 +1,4 @@
-// PERSON 2: Template Gallery (GridView with Icons/Pictures)
+// PERSON 2: Template Gallery (GridView with Icons & Custom Colors)
 import 'package:flutter/material.dart';
 import '../../routes/app_routes.dart';
 
@@ -10,7 +10,7 @@ class GalleryScreen extends StatelessWidget {
     {'name': 'Quote Post', 'color': Colors.teal, 'icon': Icons.format_quote},
     {'name': 'Birthday', 'color': Colors.pink, 'icon': Icons.cake},
     {'name': 'Motivation', 'color': Colors.indigo, 'icon': Icons.bolt},
-    {'name': 'Sale Banner', 'color': Colors.red, 'icon': Icons.local_offer},
+    {'name': 'Sale Banner', 'color': Colors.redAccent, 'icon': Icons.local_offer},
     {'name': 'Plain Post', 'color': Colors.blueGrey, 'icon': Icons.article},
   ];
 
@@ -23,11 +23,15 @@ class GalleryScreen extends StatelessWidget {
       itemCount: _templates.length,
       itemBuilder: (context, i) {
         final t = _templates[i];
+        final color = t['color'] as Color;
         return InkWell(
-          onTap: () => Navigator.pushNamed(context, AppRoutes.editor,
-              arguments: {'name': t['name'], 'color': t['color'], 'icon': t['icon']}),
+          onTap: () => Navigator.pushNamed(context, AppRoutes.editor, arguments: {
+            'name': t['name'],
+            'color': color,
+            'icon': t['icon'],
+          }),
           child: Card(
-            color: t['color'] as Color,
+            color: color,
             elevation: 4,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             child: Padding(

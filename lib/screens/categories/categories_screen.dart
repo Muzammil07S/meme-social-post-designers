@@ -62,8 +62,11 @@ class CategoriesScreen extends StatelessWidget {
               itemBuilder: (context, i) {
                 final templateName = items[i];
                 return InkWell(
-                  onTap: () => Navigator.pushNamed(context, AppRoutes.editor,
-                      arguments: {'name': templateName, 'color': color}),
+                  onTap: () => Navigator.pushNamed(context, AppRoutes.editor, arguments: {
+                    'name': templateName,
+                    'color': color,
+                    'icon': data['icon'] as IconData,
+                  }),
                   child: Card(
                     color: color,
                     elevation: 4,

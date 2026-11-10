@@ -7,8 +7,16 @@ class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});
 
   static final List<Design> favorites = [
-    const Design(id: 1, title: 'Classic Meme', text: 'When code works on first try'),
-    const Design(id: 3, title: 'Quote', text: 'Keep going, success is near'),
+    const Design(
+      id: 1,
+      title: 'Classic Meme',
+      text: 'When code works on first try',
+    ),
+    const Design(
+      id: 3,
+      title: 'Quote',
+      text: 'Keep going, success is near',
+    ),
   ];
 
   @override
@@ -35,15 +43,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               itemCount: FavoritesScreen.favorites.length,
               itemBuilder: (context, i) {
                 final d = FavoritesScreen.favorites[i];
+                final bg = Color(d.backgroundColorValue);
+
                 return Container(
                   margin: const EdgeInsets.only(bottom: 12),
                   height: 120,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.teal.shade700, Colors.cyan.shade600],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
+                    color: bg,
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(

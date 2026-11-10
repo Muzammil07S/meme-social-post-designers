@@ -70,6 +70,13 @@ class _DesignDetailScreenState extends State<DesignDetailScreen> {
                   color: bg,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: Colors.white24, width: 2),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 8,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
                 ),
                 alignment: Alignment.center,
                 padding: const EdgeInsets.all(20),

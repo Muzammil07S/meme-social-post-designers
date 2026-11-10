@@ -40,7 +40,7 @@ class AboutScreen extends StatelessWidget {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.deepPurple),
             ),
             SizedBox(height: 8),
-            Text('• Person 1: Architecture, Navigation & Native Android\n• Person 2: Templates, Editor & Stickers\n• Person 3: Database, My Designs, Search & Favorites'),
+            Text('project of Mobile app development'),
           ],
         ),
       ),

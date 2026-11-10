@@ -7,9 +7,31 @@ class MyDesignsScreen extends StatefulWidget {
   const MyDesignsScreen({super.key});
 
   static final List<Design> designs = [
-    Design(id: 1, title: 'Classic Meme', text: 'When code works on first try', bottomText: 'IT IS A MIRACLE', backgroundColorValue: Colors.orange.toARGB32(), textColorValue: Colors.white.toARGB32(), fontSize: 24),
-    Design(id: 2, title: 'Birthday post', text: 'Happy Birthday to my best friend!', backgroundColorValue: Colors.pink.toARGB32(), textColorValue: Colors.white.toARGB32(), fontSize: 22),
-    Design(id: 3, title: 'Quote', text: 'Keep going, success is near', backgroundColorValue: Colors.teal.toARGB32(), textColorValue: Colors.white.toARGB32(), fontSize: 22),
+    Design(
+      id: 1,
+      title: 'Classic Meme',
+      text: 'When code works on first try',
+      bottomText: 'IT IS A MIRACLE',
+      backgroundColorValue: Colors.orange.toARGB32(),
+      textColorValue: Colors.white.toARGB32(),
+      fontSize: 24,
+    ),
+    Design(
+      id: 2,
+      title: 'Birthday post',
+      text: 'Happy Birthday to my best friend!',
+      backgroundColorValue: Colors.pink.toARGB32(),
+      textColorValue: Colors.white.toARGB32(),
+      fontSize: 22,
+    ),
+    Design(
+      id: 3,
+      title: 'Quote',
+      text: 'Keep going, success is near',
+      backgroundColorValue: Colors.teal.toARGB32(),
+      textColorValue: Colors.white.toARGB32(),
+      fontSize: 22,
+    ),
   ];
 
   @override
@@ -95,8 +117,10 @@ class _MyDesignsScreenState extends State<MyDesignsScreen> {
                               icon: const Icon(Icons.edit, size: 18),
                               label: const Text('Edit'),
                               onPressed: () async {
-                                await Navigator.pushNamed(context, AppRoutes.editor,
-                                    arguments: {'name': d.title, 'color': Color(d.backgroundColorValue)});
+                                await Navigator.pushNamed(context, AppRoutes.editor, arguments: {
+                                  'name': d.title,
+                                  'color': Color(d.backgroundColorValue),
+                                });
                                 setState(() {});
                               },
                             ),
