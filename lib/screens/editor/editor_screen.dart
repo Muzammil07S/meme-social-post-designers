@@ -26,6 +26,14 @@ class _EditorScreenState extends State<EditorScreen> {
     final args = ModalRoute.of(context)?.settings.arguments as Map?;
     final bg = (args?['color'] as Color?) ?? Colors.deepPurple;
     final name = (args?['name'] as String?) ?? 'New Design';
+    final icon = (args?['icon'] as IconData?) ?? (
+      name.toLowerCase().contains('meme') ? Icons.emoji_emotions :
+      name.toLowerCase().contains('quote') ? Icons.format_quote :
+      name.toLowerCase().contains('birthday') ? Icons.cake :
+      name.toLowerCase().contains('sale') ? Icons.local_offer :
+      name.toLowerCase().contains('motivation') ? Icons.bolt : Icons.article
+    );
+
     final isMeme = name.toLowerCase().contains('meme');
     final isQuote = name.toLowerCase().contains('quote');
     final isBirthday = name.toLowerCase().contains('birthday');
@@ -43,6 +51,7 @@ class _EditorScreenState extends State<EditorScreen> {
                 'color': _textColor,
                 'bg': bg,
                 'template': name,
+                'icon': icon,
               }),
         ),
       ]),
@@ -55,7 +64,7 @@ class _EditorScreenState extends State<EditorScreen> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: bg,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: Colors.white24, width: 2),
                 ),
                 alignment: Alignment.center,
@@ -63,6 +72,16 @@ class _EditorScreenState extends State<EditorScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    // Template Picture / Icon representation
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(icon, size: 36, color: Colors.white70),
+                        const SizedBox(width: 8),
+                        Text(name, style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.bold, fontSize: 14)),
+                      ],
+                    ),
+
                     if (isMeme)
                       Text(
                         _controller.text.toUpperCase(),
@@ -79,26 +98,25 @@ class _EditorScreenState extends State<EditorScreen> {
                     else if (isQuote)
                       Column(
                         children: [
-                          const Text('“', style: TextStyle(fontSize: 40, color: Colors.white70, height: 0.5)),
+                          const Text('“', style: TextStyle(fontSize: 36, color: Colors.white70, height: 0.5)),
                           Text(
                             _controller.text,
                             textAlign: TextAlign.center,
                             style: TextStyle(fontSize: _fontSize, color: _textColor, fontStyle: FontStyle.italic),
                           ),
-                          const Text('”', style: TextStyle(fontSize: 40, color: Colors.white70, height: 0.5)),
+                          const Text('”', style: TextStyle(fontSize: 36, color: Colors.white70, height: 0.5)),
                         ],
                       )
                     else if (isBirthday)
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.cake, size: 48, color: Colors.yellow),
-                          const SizedBox(height: 8),
                           Text(
                             _controller.text,
                             textAlign: TextAlign.center,
                             style: TextStyle(fontSize: _fontSize, color: _textColor, fontWeight: FontWeight.bold),
                           ),
+                          const SizedBox(height: 4),
                           const Text('🎉 Happy Birthday! 🎂', style: TextStyle(color: Colors.white70)),
                         ],
                       )
@@ -107,11 +125,11 @@ class _EditorScreenState extends State<EditorScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                             color: Colors.yellow,
-                            child: const Text('SPECIAL OFFER', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                            child: const Text('SPECIAL OFFER', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 11)),
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 8),
                           Text(
                             _controller.text,
                             textAlign: TextAlign.center,
@@ -138,7 +156,9 @@ class _EditorScreenState extends State<EditorScreen> {
                             Shadow(blurRadius: 4, color: Colors.black, offset: Offset(2, 2)),
                           ],
                         ),
-                      ),
+                      )
+                    else
+                      const SizedBox(height: 20), // balance spacing
                   ],
                 ),
               ),

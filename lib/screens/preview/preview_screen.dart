@@ -16,6 +16,7 @@ class PreviewScreen extends StatelessWidget {
     final color = (args?['color'] as Color?) ?? Colors.white;
     final bg = (args?['bg'] as Color?) ?? Colors.deepPurple;
     final template = (args?['template'] as String?) ?? '';
+    final icon = (args?['icon'] as IconData?) ?? Icons.article;
 
     final isMeme = template.toLowerCase().contains('meme');
     final isQuote = template.toLowerCase().contains('quote');
@@ -41,6 +42,15 @@ class PreviewScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(icon, size: 36, color: Colors.white70),
+                        const SizedBox(width: 8),
+                        Text(template, style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.bold, fontSize: 14)),
+                      ],
+                    ),
+
                     if (isMeme)
                       Text(
                         text.toUpperCase(),
@@ -57,26 +67,25 @@ class PreviewScreen extends StatelessWidget {
                     else if (isQuote)
                       Column(
                         children: [
-                          const Text('“', style: TextStyle(fontSize: 40, color: Colors.white70, height: 0.5)),
+                          const Text('“', style: TextStyle(fontSize: 36, color: Colors.white70, height: 0.5)),
                           Text(
                             text,
                             textAlign: TextAlign.center,
                             style: TextStyle(fontSize: size, color: color, fontStyle: FontStyle.italic),
                           ),
-                          const Text('”', style: TextStyle(fontSize: 40, color: Colors.white70, height: 0.5)),
+                          const Text('”', style: TextStyle(fontSize: 36, color: Colors.white70, height: 0.5)),
                         ],
                       )
                     else if (isBirthday)
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.cake, size: 48, color: Colors.yellow),
-                          const SizedBox(height: 8),
                           Text(
                             text,
                             textAlign: TextAlign.center,
                             style: TextStyle(fontSize: size, color: color, fontWeight: FontWeight.bold),
                           ),
+                          const SizedBox(height: 4),
                           const Text('🎉 Happy Birthday! 🎂', style: TextStyle(color: Colors.white70)),
                         ],
                       )
@@ -85,11 +94,11 @@ class PreviewScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                             color: Colors.yellow,
-                            child: const Text('SPECIAL OFFER', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                            child: const Text('SPECIAL OFFER', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 11)),
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 8),
                           Text(
                             text,
                             textAlign: TextAlign.center,
@@ -116,7 +125,9 @@ class PreviewScreen extends StatelessWidget {
                             Shadow(blurRadius: 4, color: Colors.black, offset: Offset(2, 2)),
                           ],
                         ),
-                      ),
+                      )
+                    else
+                      const SizedBox(height: 20),
                   ],
                 ),
               ),
