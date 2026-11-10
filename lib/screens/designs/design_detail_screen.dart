@@ -17,9 +17,18 @@ class _DesignDetailScreenState extends State<DesignDetailScreen> {
     final d = ModalRoute.of(context)?.settings.arguments as Design?;
     final isFav = FavoritesScreen.favorites.any((fav) => fav.id == d?.id);
 
+    final template = (d?.title ?? '').toLowerCase();
+    final isMeme = template.contains('meme');
+    final isQuote = template.contains('quote');
+    final isBirthday = template.contains('birthday');
+    final isSale = template.contains('sale');
+    final bg = Color(d?.backgroundColorValue ?? Colors.deepPurple.toARGB32());
+    final textColor = Color(d?.textColorValue ?? Colors.white.toARGB32());
+    final fontSize = d?.fontSize ?? 28.0;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(d?.title ?? 'Design'),
+        title: Text(d?.title ?? 'Design Details'),
         actions: [
           IconButton(
             icon: Icon(
@@ -50,10 +59,104 @@ class _DesignDetailScreenState extends State<DesignDetailScreen> {
           ),
         ],
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Text(d?.text ?? '', textAlign: TextAlign.center, style: const TextStyle(fontSize: 28)),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: bg,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.white24, width: 2),
+                ),
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    if (isMeme)
+                      Text(
+                        (d?.text ?? '').toUpperCase(),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: fontSize,
+                          color: textColor,
+                          fontWeight: FontWeight.bold,
+                          shadows: const [
+                            Shadow(blurRadius: 4, color: Colors.black, offset: Offset(2, 2)),
+                          ],
+                        ),
+                      )
+                    else if (isQuote)
+                      Column(
+                        children: [
+                          const Text('“', style: TextStyle(fontSize: 40, color: Colors.white70, height: 0.5)),
+                          Text(
+                            d?.text ?? '',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: fontSize, color: textColor, fontStyle: FontStyle.italic),
+                          ),
+                          const Text('”', style: TextStyle(fontSize: 40, color: Colors.white70, height: 0.5)),
+                        ],
+                      )
+                    else if (isBirthday)
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.cake, size: 48, color: Colors.yellow),
+                          const SizedBox(height: 8),
+                          Text(
+                            d?.text ?? '',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: fontSize, color: textColor, fontWeight: FontWeight.bold),
+                          ),
+                          const Text('🎉 Happy Birthday! 🎂', style: TextStyle(color: Colors.white70)),
+                        ],
+                      )
+                    else if (isSale)
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                            color: Colors.yellow,
+                            child: const Text('SPECIAL OFFER', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            d?.text ?? '',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: fontSize, color: textColor, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      )
+                    else
+                      Text(
+                        d?.text ?? '',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: fontSize, color: textColor),
+                      ),
+
+                    if (isMeme && d?.bottomText != null && d!.bottomText!.isNotEmpty)
+                      Text(
+                        d.bottomText!.toUpperCase(),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: fontSize,
+                          color: textColor,
+                          fontWeight: FontWeight.bold,
+                          shadows: const [
+                            Shadow(blurRadius: 4, color: Colors.black, offset: Offset(2, 2)),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

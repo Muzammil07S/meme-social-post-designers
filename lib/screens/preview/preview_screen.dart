@@ -126,13 +126,14 @@ class PreviewScreen extends StatelessWidget {
               icon: const Icon(Icons.save),
               label: const Text('Save Design'),
               onPressed: () {
-                final fullText = bottomText != null && bottomText.isNotEmpty
-                    ? '$text / $bottomText'
-                    : text;
                 final newDesign = Design(
                   id: DateTime.now().millisecondsSinceEpoch,
                   title: template.isNotEmpty ? template : 'Custom Design',
-                  text: fullText,
+                  text: text,
+                  bottomText: bottomText,
+                  backgroundColorValue: bg.toARGB32(),
+                  textColorValue: color.toARGB32(),
+                  fontSize: size,
                 );
                 MyDesignsScreen.designs.insert(0, newDesign);
                 ScaffoldMessenger.of(context).showSnackBar(
