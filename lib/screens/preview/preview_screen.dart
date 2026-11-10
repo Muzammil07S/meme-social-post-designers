@@ -1,5 +1,8 @@
 // PERSON 2: Preview / Export
 import 'package:flutter/material.dart';
+import '../../models/design.dart';
+import '../../routes/app_routes.dart';
+import '../designs/my_designs_screen.dart';
 
 class PreviewScreen extends StatelessWidget {
   const PreviewScreen({super.key});
@@ -122,8 +125,21 @@ class PreviewScreen extends StatelessWidget {
             ElevatedButton.icon(
               icon: const Icon(Icons.save),
               label: const Text('Save Design'),
-              onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Design saved successfully!'))),
+              onPressed: () {
+                final fullText = bottomText != null && bottomText.isNotEmpty
+                    ? '$text / $bottomText'
+                    : text;
+                final newDesign = Design(
+                  id: DateTime.now().millisecondsSinceEpoch,
+                  title: template.isNotEmpty ? template : 'Custom Design',
+                  text: fullText,
+                );
+                MyDesignsScreen.designs.insert(0, newDesign);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Design saved to My Designs!')),
+                );
+                Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (route) => false);
+              },
             ),
           ],
         ),
