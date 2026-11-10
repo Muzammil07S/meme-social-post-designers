@@ -1,4 +1,4 @@
-// PERSON 2: Preview / Export
+// PERSON 2: Preview / Export with Share
 import 'package:flutter/material.dart';
 import '../../models/design.dart';
 import '../../routes/app_routes.dart';
@@ -23,7 +23,7 @@ class PreviewScreen extends StatelessWidget {
     final isSale = template.toLowerCase().contains('sale');
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Preview')),
+      appBar: AppBar(title: const Text('Preview & Share')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -33,7 +33,7 @@ class PreviewScreen extends StatelessWidget {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: bg,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: Colors.white24, width: 2),
                 ),
                 alignment: Alignment.center,
@@ -121,26 +121,55 @@ class PreviewScreen extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 12),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.save),
-              label: const Text('Save Design'),
-              onPressed: () {
-                final newDesign = Design(
-                  id: DateTime.now().millisecondsSinceEpoch,
-                  title: template.isNotEmpty ? template : 'Custom Design',
-                  text: text,
-                  bottomText: bottomText,
-                  backgroundColorValue: bg.toARGB32(),
-                  textColorValue: color.toARGB32(),
-                  fontSize: size,
-                );
-                MyDesignsScreen.designs.insert(0, newDesign);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Design saved to My Designs!')),
-                );
-                Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (route) => false);
-              },
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple, foregroundColor: Colors.white),
+                    icon: const Icon(Icons.save),
+                    label: const Text('Save Design'),
+                    onPressed: () {
+                      final newDesign = Design(
+                        id: DateTime.now().millisecondsSinceEpoch,
+                        title: template.isNotEmpty ? template : 'Custom Design',
+                        text: text,
+                        bottomText: bottomText,
+                        backgroundColorValue: bg.toARGB32(),
+                        textColorValue: color.toARGB32(),
+                        fontSize: size,
+                      );
+                      MyDesignsScreen.designs.insert(0, newDesign);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Design saved to My Designs successfully!')),
+                      );
+                      Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (route) => false);
+                    },
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    icon: const Icon(Icons.share, color: Colors.deepPurple),
+                    label: const Text('Share', style: TextStyle(color: Colors.deepPurple)),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                          title: const Text('Share Design'),
+                          content: Text('Sharing text: "$text"\n\nDesign ready to share via WhatsApp / Social Media!'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(ctx),
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ],
         ),

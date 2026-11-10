@@ -1,4 +1,4 @@
-// PERSON 3: My Designs (ListView)
+// PERSON 3: My Designs (ListView with Edit & Delete)
 import 'package:flutter/material.dart';
 import '../../models/design.dart';
 import '../../routes/app_routes.dart';
@@ -36,40 +36,87 @@ class _MyDesignsScreenState extends State<MyDesignsScreen> {
               itemCount: MyDesignsScreen.designs.length,
               itemBuilder: (context, i) {
                 final d = MyDesignsScreen.designs[i];
-                return GestureDetector(
-                  onTap: () async {
-                    await Navigator.pushNamed(context, AppRoutes.designDetail,
-                        arguments: d);
-                    setState(() {});
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.only(bottom: 16),
-                    height: 160,
-                    child: Stack(
-                      children: [
-                        Positioned.fill(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: _buildMiniPreview(d),
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        blurRadius: 6,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          await Navigator.pushNamed(context, AppRoutes.designDetail,
+                              arguments: d);
+                          setState(() {});
+                        },
+                        child: SizedBox(
+                          height: 130,
+                          child: Stack(
+                            children: [
+                              Positioned.fill(
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                                  child: _buildMiniPreview(d),
+                                ),
+                              ),
+                              Positioned(
+                                top: 8,
+                                left: 8,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: Colors.black54,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    d.title,
+                                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 11),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        Positioned(
-                          top: 8,
-                          left: 8,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: Colors.black54,
-                              borderRadius: BorderRadius.circular(8),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton.icon(
+                              icon: const Icon(Icons.edit, size: 18),
+                              label: const Text('Edit'),
+                              onPressed: () async {
+                                await Navigator.pushNamed(context, AppRoutes.editor,
+                                    arguments: {'name': d.title, 'color': Color(d.backgroundColorValue)});
+                                setState(() {});
+                              },
                             ),
-                            child: Text(
-                              d.title,
-                              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 11),
+                            const SizedBox(width: 8),
+                            TextButton.icon(
+                              icon: const Icon(Icons.delete, size: 18, color: Colors.red),
+                              label: const Text('Delete', style: TextStyle(color: Colors.red)),
+                              onPressed: () {
+                                setState(() {
+                                  MyDesignsScreen.designs.removeAt(i);
+                                });
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Design deleted successfully')),
+                                );
+                              },
                             ),
-                          ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 );
               },
@@ -86,8 +133,7 @@ class _MyDesignsScreenState extends State<MyDesignsScreen> {
     return Container(
       decoration: BoxDecoration(
         color: bg,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white24, width: 2),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       ),
       alignment: Alignment.center,
       padding: const EdgeInsets.all(12),
@@ -100,21 +146,21 @@ class _MyDesignsScreenState extends State<MyDesignsScreen> {
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 16,
               color: textColor,
               fontWeight: FontWeight.bold,
               shadows: isMeme ? const [Shadow(blurRadius: 3, color: Colors.black, offset: Offset(1, 1))] : null,
             ),
           ),
           if (isMeme && d.bottomText != null && d.bottomText!.isNotEmpty) ...[
-            const SizedBox(height: 6),
+            const SizedBox(height: 4),
             Text(
               d.bottomText!,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 14,
                 color: textColor,
                 fontWeight: FontWeight.bold,
                 shadows: const [Shadow(blurRadius: 3, color: Colors.black, offset: Offset(1, 1))],
