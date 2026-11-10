@@ -171,21 +171,37 @@ class _EditorScreenState extends State<EditorScreen> {
               onChanged: (v) => setState(() => _fontSize = v),
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [Colors.white, Colors.black, Colors.yellow, Colors.cyan, Colors.pinkAccent]
-                  .map((c) => GestureDetector(
-                        onTap: () => setState(() => _textColor = c),
-                        child: Container(
-                          margin: const EdgeInsets.all(6),
-                          width: 36,
-                          height: 36,
-                          decoration: BoxDecoration(
-                              color: c,
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.grey)),
-                        ),
-                      ))
-                  .toList(),
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [Colors.white, Colors.black, Colors.yellow, Colors.cyan, Colors.pinkAccent]
+                      .map((c) => GestureDetector(
+                            onTap: () => setState(() => _textColor = c),
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 4),
+                              width: 32,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                  color: c,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: Colors.grey)),
+                            ),
+                          ))
+                      .toList(),
+                ),
+                ElevatedButton.icon(
+                  icon: const Icon(Icons.emoji_emotions, size: 20),
+                  label: const Text('Stickers'),
+                  onPressed: () async {
+                    final sticker = await Navigator.pushNamed(context, AppRoutes.stickers);
+                    if (sticker != null && sticker is String) {
+                      setState(() {
+                        _controller.text = '${_controller.text} $sticker';
+                      });
+                    }
+                  },
+                ),
+              ],
             ),
           ],
         ),
