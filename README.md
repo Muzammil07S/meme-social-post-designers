@@ -1,2 +1,2 @@
-# meme-social-post-designers
-Meme / Social Post Designer - An Android app built in Android Studio to create memes and social media posts with custom text, templates, and fonts. Drag &amp; drop text editor.
+# meme-social-post-designer-flutter-
+Meme / Social Post Designer - a Flutter mobile app to create memes and social media posts. CSC303 Mobile Application Development project, COMSATS University Islamabad.

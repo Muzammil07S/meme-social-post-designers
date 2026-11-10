@@ -1,0 +1,21 @@
+name: meme_social_post_designer
+description: Meme / Social Post Designer - Flutter project (CSC303 Mobile Application Development)
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  provider: ^6.1.2
+  # Person 3 yahan drift, sqlite3_flutter_libs, path_provider, path add karega
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
