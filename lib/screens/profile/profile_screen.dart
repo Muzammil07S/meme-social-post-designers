@@ -1,6 +1,6 @@
-// PERSON 1: Profile
+// PERSON 1: Profile with SQLite Design Count
 import 'package:flutter/material.dart';
-import '../designs/my_designs_screen.dart';
+import '../../database/database_helper.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -21,8 +21,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final totalDesigns = MyDesignsScreen.designs.length;
-
     return Scaffold(
       appBar: AppBar(title: const Text('Profile')),
       body: Padding(
@@ -37,11 +35,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            Center(
-              child: Text(
-                'Total Designs Created: $totalDesigns',
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.deepPurple),
-              ),
+            FutureBuilder(
+              future: DatabaseHelper.instance.getDesigns(),
+              builder: (context, snapshot) {
+                final count = snapshot.data?.length ?? 0;
+                return Center(
+                  child: Text(
+                    'Total Designs in Database: $count',
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.deepPurple),
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 24),
             TextField(

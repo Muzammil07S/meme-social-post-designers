@@ -1,8 +1,8 @@
-// PERSON 2: Preview / Export with Share
+// PERSON 2 & 3: Preview & Save to SQLite Database
 import 'package:flutter/material.dart';
+import '../../database/database_helper.dart';
 import '../../models/design.dart';
 import '../../routes/app_routes.dart';
-import '../designs/my_designs_screen.dart';
 
 class PreviewScreen extends StatelessWidget {
   const PreviewScreen({super.key});
@@ -146,10 +146,9 @@ class PreviewScreen extends StatelessWidget {
                   child: ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple, foregroundColor: Colors.white),
                     icon: const Icon(Icons.save),
-                    label: const Text('Save Design'),
-                    onPressed: () {
+                    label: const Text('Save to DB'),
+                    onPressed: () async {
                       final newDesign = Design(
-                        id: DateTime.now().millisecondsSinceEpoch,
                         title: template.isNotEmpty ? template : 'Custom Design',
                         text: text,
                         bottomText: bottomText,
@@ -157,11 +156,13 @@ class PreviewScreen extends StatelessWidget {
                         textColorValue: color.toARGB32(),
                         fontSize: size,
                       );
-                      MyDesignsScreen.designs.insert(0, newDesign);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Design saved to My Designs successfully!')),
-                      );
-                      Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (route) => false);
+                      await DatabaseHelper.instance.insertDesign(newDesign);
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Design saved to SQLite database successfully!')),
+                        );
+                        Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (route) => false);
+                      }
                     },
                   ),
                 ),

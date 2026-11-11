@@ -1,150 +1,134 @@
-// PERSON 3: My Designs (ListView with Edit & Delete)
+// PERSON 3: My Designs (ListView with SQLite Database Stream & CRUD)
 import 'package:flutter/material.dart';
+import '../../database/database_helper.dart';
 import '../../models/design.dart';
 import '../../routes/app_routes.dart';
 
-class MyDesignsScreen extends StatefulWidget {
+class MyDesignsScreen extends StatelessWidget {
   const MyDesignsScreen({super.key});
 
-  static final List<Design> designs = [
-    Design(
-      id: 1,
-      title: 'Classic Meme',
-      text: 'When code works on first try',
-      bottomText: 'IT IS A MIRACLE',
-      backgroundColorValue: Colors.orange.toARGB32(),
-      textColorValue: Colors.white.toARGB32(),
-      fontSize: 24,
-    ),
-    Design(
-      id: 2,
-      title: 'Birthday post',
-      text: 'Happy Birthday to my best friend!',
-      backgroundColorValue: Colors.pink.toARGB32(),
-      textColorValue: Colors.white.toARGB32(),
-      fontSize: 22,
-    ),
-    Design(
-      id: 3,
-      title: 'Quote',
-      text: 'Keep going, success is near',
-      backgroundColorValue: Colors.teal.toARGB32(),
-      textColorValue: Colors.white.toARGB32(),
-      fontSize: 22,
-    ),
-  ];
-
-  @override
-  State<MyDesignsScreen> createState() => _MyDesignsScreenState();
-}
-
-class _MyDesignsScreenState extends State<MyDesignsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: MyDesignsScreen.designs.isEmpty
-          ? const Center(
+      body: StreamBuilder<List<Design>>(
+        stream: DatabaseHelper.instance.designsStream,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+
+          final designs = snapshot.data ?? [];
+
+          if (designs.isEmpty) {
+            return const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.folder_open, size: 64, color: Colors.grey),
                   SizedBox(height: 12),
-                  Text('No saved designs yet', style: TextStyle(fontSize: 18, color: Colors.grey)),
+                  Text('No saved designs in database yet', style: TextStyle(fontSize: 18, color: Colors.grey)),
                 ],
               ),
-            )
-          : ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: MyDesignsScreen.designs.length,
-              itemBuilder: (context, i) {
-                final d = MyDesignsScreen.designs[i];
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.1),
-                        blurRadius: 6,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () async {
-                          await Navigator.pushNamed(context, AppRoutes.designDetail,
-                              arguments: d);
-                          setState(() {});
-                        },
-                        child: SizedBox(
-                          height: 130,
-                          child: Stack(
-                            children: [
-                              Positioned.fill(
-                                child: ClipRRect(
-                                  borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                                  child: _buildMiniPreview(d),
-                                ),
-                              ),
-                              Positioned(
-                                top: 8,
-                                left: 8,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: Colors.black54,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    d.title,
-                                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 11),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+            );
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: designs.length,
+            itemBuilder: (context, i) {
+              final d = designs[i];
+              return Container(
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).cardColor,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.1),
+                      blurRadius: 6,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () async {
+                        await Navigator.pushNamed(context, AppRoutes.designDetail,
+                            arguments: d);
+                      },
+                      child: SizedBox(
+                        height: 130,
+                        child: Stack(
                           children: [
-                            TextButton.icon(
-                              icon: const Icon(Icons.edit, size: 18),
-                              label: const Text('Edit'),
-                              onPressed: () async {
-                                await Navigator.pushNamed(context, AppRoutes.editor, arguments: {
-                                  'name': d.title,
-                                  'color': Color(d.backgroundColorValue),
-                                });
-                                setState(() {});
-                              },
+                            Positioned.fill(
+                              child: ClipRRect(
+                                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                                child: _buildMiniPreview(d),
+                              ),
                             ),
-                            const SizedBox(width: 8),
-                            TextButton.icon(
-                              icon: const Icon(Icons.delete, size: 18, color: Colors.red),
-                              label: const Text('Delete', style: TextStyle(color: Colors.red)),
-                              onPressed: () {
-                                setState(() {
-                                  MyDesignsScreen.designs.removeAt(i);
-                                });
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Design deleted successfully')),
-                                );
-                              },
+                            Positioned(
+                              top: 8,
+                              left: 8,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: Colors.black54,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  d.title,
+                                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 11),
+                                ),
+                              ),
                             ),
                           ],
                         ),
                       ),
-                    ],
-                  ),
-                );
-              },
-            ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton.icon(
+                            icon: const Icon(Icons.edit, size: 18),
+                            label: const Text('Edit'),
+                            onPressed: () async {
+                              await Navigator.pushNamed(context, AppRoutes.editor, arguments: {
+                                'name': d.title,
+                                'color': Color(d.backgroundColorValue),
+                              });
+                            },
+                          ),
+                          const SizedBox(width: 8),
+                          TextButton.icon(
+                            icon: const Icon(Icons.delete, size: 18, color: Colors.red),
+                            label: const Text('Delete', style: TextStyle(color: Colors.red)),
+                            onPressed: () async {
+                              if (d.id != null) {
+                                await DatabaseHelper.instance.deleteDesign(d.id!);
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('Design deleted from SQLite database successfully')),
+                                  );
+                                }
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 

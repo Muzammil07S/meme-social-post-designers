@@ -1,8 +1,8 @@
-// PERSON 3: Detail + delete dialog + favorite toggle
+// PERSON 3: Detail + delete dialog + SQLite database integration
 import 'package:flutter/material.dart';
+import '../../database/database_helper.dart';
 import '../../models/design.dart';
 import '../favorites/favorites_screen.dart';
-import 'my_designs_screen.dart';
 
 class DesignDetailScreen extends StatefulWidget {
   const DesignDetailScreen({super.key});
@@ -174,20 +174,23 @@ class _DesignDetailScreenState extends State<DesignDetailScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Delete design?'),
-        content: const Text('Yeh design hamesha ke liye delete ho jayega.'),
+        content: const Text('Yeh design database se hamesha ke liye delete ho jayega.'),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
           TextButton(
-            onPressed: () {
+            onPressed: () async {
               Navigator.pop(ctx);
               Navigator.pop(context);
-              if (d != null) {
-                MyDesignsScreen.designs.removeWhere((item) => item.id == d.id);
+              if (d != null && d.id != null) {
+                await DatabaseHelper.instance.deleteDesign(d.id!);
                 FavoritesScreen.favorites.removeWhere((item) => item.id == d.id);
               }
-              ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Design deleted')));
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Design deleted from database')),
+                );
+              }
             },
             child: const Text('Delete'),
           ),
