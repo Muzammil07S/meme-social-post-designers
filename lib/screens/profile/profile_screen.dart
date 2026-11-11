@@ -1,6 +1,7 @@
 // PERSON 1: Profile with SQLite Design Count
 import 'package:flutter/material.dart';
 import '../../database/database_helper.dart';
+import '../../models/design.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -35,7 +36,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            FutureBuilder(
+            FutureBuilder<List<Design>>(
               future: DatabaseHelper.instance.getDesigns(),
               builder: (context, snapshot) {
                 final count = snapshot.data?.length ?? 0;
