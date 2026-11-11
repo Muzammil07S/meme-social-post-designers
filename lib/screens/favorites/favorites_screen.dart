@@ -53,7 +53,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.15),
+                        color: Colors.black.withOpacity(0.15),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       ),

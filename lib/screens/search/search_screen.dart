@@ -11,13 +11,11 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  String _query = '';
   List<Design> _results = [];
   bool _isLoading = false;
 
   void _search(String query) async {
     setState(() {
-      _query = query;
       _isLoading = true;
     });
     final res = await DatabaseHelper.instance.searchDesigns(query);

@@ -111,13 +111,13 @@ class _EditorScreenState extends State<EditorScreen> {
   Color _getFilterOverlayColor() {
     switch (_activeFilter) {
       case 'Vintage':
-        return Colors.amber.withValues(alpha: 0.25);
+        return Colors.amber.withOpacity(0.25);
       case 'Neon':
-        return Colors.purpleAccent.withValues(alpha: 0.25);
+        return Colors.purpleAccent.withOpacity(0.25);
       case 'Sunset':
-        return Colors.deepOrangeAccent.withValues(alpha: 0.3);
+        return Colors.deepOrangeAccent.withOpacity(0.3);
       case 'Dark':
-        return Colors.black.withValues(alpha: 0.45);
+        return Colors.black.withOpacity(0.45);
       case 'Normal':
       default:
         return Colors.transparent;
@@ -175,7 +175,7 @@ class _EditorScreenState extends State<EditorScreen> {
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.15),
+                    color: Colors.black.withOpacity(0.15),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -284,7 +284,7 @@ class _EditorScreenState extends State<EditorScreen> {
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.08),
+                    color: Colors.black.withOpacity(0.08),
                     blurRadius: 12,
                     offset: const Offset(0, -2),
                   ),
@@ -340,7 +340,7 @@ class _EditorScreenState extends State<EditorScreen> {
                         // Quick Color Palette Dots on the Right
                         Row(
                           children: _paletteColors.map((c) {
-                            final isSelected = _textColor.toARGB32() == c.toARGB32();
+                            final isSelected = _textColor.value == c.value;
                             return GestureDetector(
                               onTap: () => setState(() => _textColor = c),
                               child: Container(
@@ -456,7 +456,7 @@ class _EditorScreenState extends State<EditorScreen> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: _bgColors.map((c) {
-                  final isSelected = _bgColor.toARGB32() == c.toARGB32();
+                  final isSelected = _bgColor.value == c.value;
                   return GestureDetector(
                     onTap: () => setState(() => _bgColor = c),
                     child: Container(
